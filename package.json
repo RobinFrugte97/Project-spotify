@@ -1,0 +1,19 @@
+{
+  "name": "project-spotify",
+  "version": "1.0.0",
+  "description": "Personal project using various datasets in combination with Spotify datasets",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobinFrugte97/Project-spotify.git"
+  },
+  "author": "Robin Frugte",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RobinFrugte97/Project-spotify/issues"
+  },
+  "homepage": "https://github.com/RobinFrugte97/Project-spotify#readme"
+}
