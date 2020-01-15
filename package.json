@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/RobinFrugte97/Project-spotify/issues"
   },
-  "homepage": "https://github.com/RobinFrugte97/Project-spotify#readme"
+  "homepage": "https://github.com/RobinFrugte97/Project-spotify#readme",
+  "dependencies": {
+    "connect": "^3.7.0",
+    "d3": "^5.15.0",
+    "serve-static": "^1.14.1"
+  }
 }

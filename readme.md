@@ -12,6 +12,8 @@ This is a list of all the interesting datasets:
 - [Top spotify songs of 2018 more detail](https://www.kaggle.com/nadintamer/top-spotify-tracks-of-2018)
 - [Top spotify songs of 2019 more detail](https://www.kaggle.com/leonardopena/top50spotify2019)
 
+
+I will be using a dataset containing the top 100 spotify songs for each day of 53 countries, for a year long.
 For this project I will pick 10 different countries with as much difference in geographical location and culture between them.
 The list of countries I will use in this application:
 - Austria (at)
