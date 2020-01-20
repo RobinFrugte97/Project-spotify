@@ -1,4 +1,5 @@
-const countries = ['at', 'ec', 'hk', 'fi', 'ic', 'it', 'jp', 'nl', 'nz', 'tr']
+const countries = ['at', 'ec', 'hk', 'fi', 'lv', 'it', 'jp', 'nl', 'nz', 'tr']
+const trackSelection = ["1","2","3","4","5"]
 let data = []
 
 async function init(){
@@ -16,16 +17,28 @@ async function getData(data){
 
 function mapData(data){
     let reMap = data.reduce((newData, entry) => {
+        const countryObject = {
+            countryCode: entry.Region,
+            totalAmountPlayed: Number(entry.Streams),
+            tracks: [],
+        }
         const musicObject = {
+            position: entry.Position,
             trackName: entry['Track Name'],
             artist: entry.Artist,
             amountPlayed: Number(entry.Streams),
             country: entry.Region,
             date: entry.Date
         }
-        if (entry.Position == "1" && countries.some(el => entry.Region.includes(el))) {
-            newData.push(musicObject)
-        } 
+        const foundObject = newData.find(el => {
+            return el.countryCode === entry.Region
+        })
+        if (!foundObject && trackSelection.some(el => entry.Position == el) && countries.some(el => entry.Region.includes(el))) {
+            newData.push(countryObject)
+        } else if (trackSelection.some(el => entry.Position == el) && countries.some(el => entry.Region.includes(el))) {
+            foundObject.tracks.push(musicObject)
+            foundObject.totalAmountPlayed += musicObject.amountPlayed
+        }
         return newData
     }, [])
     return reMap

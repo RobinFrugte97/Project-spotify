@@ -20,7 +20,7 @@ The list of countries I will use in this application:
 - Ecuador (ec)
 - Hong Kong (hk)
 - Finland (fi)
-- Iceland (ic)
+- Sri Lanka (lk)
 - Italy (it)
 - Japan (jp)
 - Netherlands (nl)
