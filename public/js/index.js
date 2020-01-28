@@ -3,12 +3,37 @@ const trackSelection = ["1","2","3","4","5"]
 let data = []
 let metaData = []
 
+let helper = {
+    loader: {
+        show: function () {
+            console.log("show")
+            window.onload = function () {
+                var loader = document.getElementById("wrapper")
+                loader.classList.remove("hidden")
+                loader.classList.add("flex")
+            }
+        },
+        hide: function () {
+            console.log("hide")
+            var loader = document.getElementById("wrapper")
+            loader.classList.remove("flex")
+            loader.classList.add("hidden")
+        }
+    }
+}
+
+
 async function init(){
+    helper.loader.show()
     await getData()
     let newData = mapData(data)
+    mapDates(newData)
+    console.log(mapDates(newData));
+    
     console.log(newData)
     console.log(metaData)
     drawVis(newData)
+    helper.loader.hide()
 }
 
 async function getData(){
@@ -21,13 +46,12 @@ async function getData(){
 }
 
 function mapData(data){
-    let reMap = data.reduce((newData, entry, i) => {
+    let reMap = data.reduce((newData, entry) => {
         let findMetaData = metaData.find(el => entry['Track Name'] == el.name)
         const countryObject = {
             country: entry.Region,
             amountPlayed: Number(entry.Streams),
             children: [],
-            source: entry.Region,
         }
         const musicObject = {
             position: entry.Position,
@@ -35,8 +59,7 @@ function mapData(data){
             artist: entry.Artist,
             amountPlayed: Number(entry.Streams),
             country: entry.Region,
-            date: entry.Date,
-            target: entry.Region,
+            date: entry.Date
         }
         const foundObject = newData.find(el => {
             return el.country === entry.Region
@@ -56,9 +79,25 @@ function mapData(data){
     return reMap
 }
 
+function mapDates(newData){
+    let dates = newData[0].children.reduce((newDates, entry) => {
+        const dateObject = {
+            date: entry.date
+        }
+        const foundObject = newDates.find(el => {
+            return el.date === entry.date
+        })
+        if(!foundObject){
+            newDates.push(dateObject)
+        }
+        return newDates
+    }, [])
+    return dates
+}
+
 function drawVis(newData){
     const width = 1920
-    const height = 1080
+    const height = 872
     const root = d3.hierarchy(newData[0]);
     const links = root.links();
     const nodes = root.descendants();
