@@ -17,8 +17,11 @@ h1 {
 }
 
 body {
+  overflow: hidden;
   margin: 0;
   height: 98%;
+  display: flex;
+  flex-direction: column;
 }
 
 svg {
@@ -39,6 +42,13 @@ div#black {
   height: 100%;
   position: absolute;
   background-image: linear-gradient(transparent, #000);
+}
+
+div#dropDown {
+    position: absolute;
+    align-self: flex-end;
+    margin-top: 3em;
+    padding-right: 9em;
 }
 
 #wrapper {
@@ -76,15 +86,35 @@ div#black {
 }
 
 #loader-text {
-    text-align: center;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: rgba(0,0,0, 0%);
-    color: black;
-    position: absolute;
-    padding-top: 1em;
-    padding-bottom: 1em;
-    width: 100%;
-    margin-top: 5em;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgba(0,0,0, 0%);
+  color: black;
+  position: absolute;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  width: 100%;
+  margin-top: 5em;
+}
+
+#sliderContainer {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 85vh;
+  width: 50%;
+  align-self: center;
+}
+
+#slider {
+  width: 100%;
+  align-self: center;
+}
+
+#dateLabel {
+  color: white;
+  font-family: helvetica;
+  align-self: center;
 }
 
 .hidden {
