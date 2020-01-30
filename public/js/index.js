@@ -1,10 +1,12 @@
-const countries = [{ abbrev: 'ec', name: 'Ecuardor' }, { abbrev: 'fi', name: 'Finland' }, { abbrev: 'it', name: 'Italy' }, { abbrev: 'nz', name: 'New Zealand' }, { abbrev: 'tr', name: 'Turkey' }, { abbrev: 'jp', name: 'Japan' }, { abbrev: 'at', name: 'Austria' }, { abbrev: 'nl', name: 'Netherlands' }, { abbrev: 'lv', name: 'Latvia' }, { abbrev: 'hk', name: 'Hong Kong' }]
+const countries = [{ abbrev: 'ec', name: 'Ecuador' }, { abbrev: 'fi', name: 'Finland' }, { abbrev: 'it', name: 'Italy' }, { abbrev: 'nz', name: 'New Zealand' }, { abbrev: 'tr', name: 'Turkey' }, { abbrev: 'jp', name: 'Japan' }, { abbrev: 'at', name: 'Austria' }, { abbrev: 'nl', name: 'Netherlands' }, { abbrev: 'lv', name: 'Latvia' }, { abbrev: 'hk', name: 'Hong Kong' }]
 const trackSelection = ["1","2","3","4","5"]
 
 let data = []
 let metaData = []
 let dates = []
 let startDate = '2017-01-01'
+let dropDown1 = ''
+let dropDown2 = ''
 
 let helper = {
     loader: {
@@ -15,8 +17,8 @@ let helper = {
                 loader.classList.remove("hidden")
                 loader.classList.add("flex")
                 // Dropdown menus added to the existing window onload function
-                let dropDown1 = document.getElementById("dropDown1")
-                let dropDown2 = document.getElementById("dropDown2")
+                dropDown1 = document.getElementById("dropDown1")
+                dropDown2 = document.getElementById("dropDown2")
                 countries.forEach((el, i)=> {
                     let option = document.createElement("option")
                     option.value = el.abbrev
@@ -141,6 +143,14 @@ function createSlider(dates, newData){
         dateLabel.textContent = currentDate
         gatherDrawData(dates, newData)
     })
+    let dropDowns = [dropDown1, dropDown2]
+    dropDowns.forEach(dropDown =>
+        dropDown.addEventListener('change', function(){
+            console.log(dropDown);
+            
+            gatherDrawData(dates, newData)
+        })
+    )
 }
 
 function gatherDrawData2(dates, newData) {
@@ -244,7 +254,6 @@ function updateVis(drawData){
     let classes = ['first', 'second']
     drawData.forEach((el, i) => {
         console.log(el)
-        const count = 1
         const root = d3.hierarchy(el)
         const links = root.links()
         const nodes = root.descendants()
@@ -252,9 +261,7 @@ function updateVis(drawData){
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id).distance(0).strength(1))
             .force("charge", d3.forceManyBody().strength(-100))
-        let container = '';
-        container = d3.select("body").select("svg").select(`#` + classes[i])
-        console.log(d3.select("body").select("svg").select(`#` + classes[i]));
+        const container = d3.select("body").select("svg").select(`#` + classes[i])
         
         let link = container.select(".links")
             .attr("stroke", "#999")
@@ -286,10 +293,6 @@ function updateVis(drawData){
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y);
         });
-
-        // invalidation.then(() => simulation.stop());
-
-        // return svg.node();
     })
 }
 
