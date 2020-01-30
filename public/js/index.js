@@ -143,29 +143,6 @@ function createSlider(dates, newData){
     })
 }
 
-function gatherDrawData(dates, newData){
-    console.log(newData)
-    let slider = document.getElementById('slider')
-    let date = dates[slider.value].date
-    console.log(date)
-    
-    function checkDate(el){
-        return el.date == date
-    }
-    let country1 = document.getElementById('dropDown1').value    
-    let country2 = document.getElementById('dropDown2').value
-    let mappedData = newData.reduce((drawData, entry) => {
-        entry.children = entry.children.filter(checkDate)
-        if (country1 == entry.country || country2 == entry.country) {
-            drawData.push(entry)
-        }
-        return drawData
-        
-    }, [])
-    console.log(mappedData)
-    updateVis(mappedData)  
-}
-
 function gatherDrawData2(dates, newData) {
     let slider = document.getElementById('slider')
     let date = dates[slider.value].date
@@ -186,28 +163,30 @@ function gatherDrawData2(dates, newData) {
 }
 
 function drawVis(drawData, dates){
+    let classes = ['first', 'second']
     drawData = gatherDrawData2(dates, drawData)
     const width = 1920
     const height = 872
     const svg = d3.select("body").append("svg")
         .attr("viewBox", [-width / 2, -height / 2, width, height]);
-    drawData.forEach(el => {
+    drawData.forEach((el, i) => {
         const root = d3.hierarchy(el);
         const links = root.links();
         const nodes = root.descendants();
+        const container = svg.append("g").attr('id', classes[i])
 
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id).distance(0).strength(1))
             .force("charge", d3.forceManyBody().strength(-100))
 
-        const link = svg.append("g").attr("id", 'links')
+        const link = container.append("g").attr("class", 'links')
             .attr("stroke", "#999")
             .attr("stroke-opacity", 0.6)
             .selectAll("line")
             .data(links)
             .join("line");
 
-        const node = svg.append("g").attr("id", 'nodes')
+        const node = container.append("g").attr("class", 'nodes')
             .attr("fill", "#fff")
             .attr("stroke", "#000")
             .attr("stroke-width", 1.5)
@@ -238,24 +217,53 @@ function drawVis(drawData, dates){
     
 }
 
-function updateVis(drawData){
-    drawData.forEach(el => {
-        const root = d3.hierarchy(el);
-        const links = root.links();
-        const nodes = root.descendants();
+function gatherDrawData(dates, newData) {
+    console.log(newData)
+    let slider = document.getElementById('slider')
+    let date = dates[slider.value].date
+    console.log(date)
 
+    function checkDate(el) {
+        return el.date == date
+    }
+    let country1 = document.getElementById('dropDown1').value
+    let country2 = document.getElementById('dropDown2').value
+    let mappedData = newData.reduce((drawData, entry) => {
+        entry.children = entry.children.filter(checkDate)
+        if (country1 == entry.country || country2 == entry.country) {
+            drawData.push(entry)
+        }
+        return drawData
+
+    }, [])
+    console.log(mappedData)
+    updateVis(mappedData)
+}
+
+function updateVis(drawData){
+    let classes = ['first', 'second']
+    drawData.forEach((el, i) => {
+        console.log(el)
+        const count = 1
+        const root = d3.hierarchy(el)
+        const links = root.links()
+        const nodes = root.descendants()
+        
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id).distance(0).strength(1))
             .force("charge", d3.forceManyBody().strength(-100))
-
-        let link = d3.select("#links")
+        let container = '';
+        container = d3.select("body").select("svg").select(`#` + classes[i])
+        console.log(d3.select("body").select("svg").select(`#` + classes[i]));
+        
+        let link = container.select(".links")
             .attr("stroke", "#999")
             .attr("stroke-opacity", 0.6)
             .selectAll("line")
             .data(links)
             .join("line");
 
-        let node = d3.select("#nodes")
+        let node = container.select(".nodes")
             .attr("fill", "#fff")
             .attr("stroke", "#000")
             .attr("stroke-width", 1.5)
