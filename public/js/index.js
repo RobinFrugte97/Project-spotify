@@ -1,5 +1,7 @@
 const countries = [{ abbrev: 'ec', name: 'Ecuador' }, { abbrev: 'fi', name: 'Finland' }, { abbrev: 'it', name: 'Italy' }, { abbrev: 'nz', name: 'New Zealand' }, { abbrev: 'tr', name: 'Turkey' }, { abbrev: 'jp', name: 'Japan' }, { abbrev: 'at', name: 'Austria' }, { abbrev: 'nl', name: 'Netherlands' }, { abbrev: 'lv', name: 'Latvia' }, { abbrev: 'hk', name: 'Hong Kong' }]
 const trackSelection = ["1","2","3","4","5"]
+const width = 1920
+const height = 872
 
 let data = []
 let metaData = []
@@ -7,6 +9,7 @@ let dates = []
 let startDate = '2017-01-01'
 let dropDown1 = ''
 let dropDown2 = ''
+let tempData = []
 
 let helper = {
     loader: {
@@ -56,7 +59,7 @@ async function init(){
     dates = mapDates(newData)
     console.log(newData)
     console.log(metaData)
-    createSlider(dates, newData)
+    createSlider(dates)
     drawVis(newData, dates)
     helper.loader.hide()
 }
@@ -123,7 +126,7 @@ function mapDates(newData){
     return dates
 }
 
-function createSlider(dates, newData){
+function createSlider(dates){
     dates = dates
     let slider = document.createElement("input")
     let dateLabel = document.createElement("label")
@@ -141,19 +144,19 @@ function createSlider(dates, newData){
         let dateLabel = document.getElementById('dateLabel')
         let currentDate = dates[el.target.value].date
         dateLabel.textContent = currentDate
-        gatherDrawData(dates, newData)
+        gatherDrawData(dates)
     })
     let dropDowns = [dropDown1, dropDown2]
     dropDowns.forEach(dropDown =>
         dropDown.addEventListener('change', function(){
             console.log(dropDown);
             
-            gatherDrawData(dates, newData)
+            gatherDrawData(dates)
         })
     )
 }
 
-function gatherDrawData2(dates, newData) {
+function kickStartData(dates, newData) {
     let slider = document.getElementById('slider')
     let date = dates[slider.value].date
     function checkDate(el) {
@@ -173,21 +176,23 @@ function gatherDrawData2(dates, newData) {
 }
 
 function drawVis(drawData, dates){
-    let classes = ['first', 'second']
-    drawData = gatherDrawData2(dates, drawData)
-    const width = 1920
-    const height = 872
+    let meta = [{ class: 'first', x: width / 3 * 1, y: height / 2 }, { class: 'second', x: width / 3 * 2, y: height / 2 }]
+    drawData = kickStartData(dates, drawData)
+
     const svg = d3.select("body").append("svg")
         .attr("viewBox", [-width / 2, -height / 2, width, height]);
     drawData.forEach((el, i) => {
         const root = d3.hierarchy(el);
         const links = root.links();
         const nodes = root.descendants();
-        const container = svg.append("g").attr('id', classes[i])
+        const container = svg.append("g").attr('id', meta[i].class)
 
         const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(0).strength(1))
+            .force("link", d3.forceLink(links).id(d => d.id).distance(100).strength(1))
             .force("charge", d3.forceManyBody().strength(-100))
+            .force('collision', d3.forceCollide().radius(function (d) {
+                return d.radius
+            }))
 
         const link = container.append("g").attr("class", 'links')
             .attr("stroke", "#999")
@@ -206,6 +211,8 @@ function drawVis(drawData, dates){
             .attr("fill", d => d.children ? null : "#000")
             .attr("stroke", d => d.children ? null : "#fff")
             .attr("r", d => Math.sqrt(d.data.amountPlayed) / 100)
+            .attr("cx", d => d.children ? null : meta[i].x)
+            .attr("cy", d => d.children ? null : meta[i].y)
             .call(drag(simulation));
 
         simulation.on("tick", () => {
@@ -219,16 +226,23 @@ function drawVis(drawData, dates){
                 .attr("cx", d => d.x)
                 .attr("cy", d => d.y);
         });
-
-        // invalidation.then(() => simulation.stop());
-
         return svg.node();
     })
     
 }
 
-function gatherDrawData(dates, newData) {
-    console.log(newData)
+async function getNewData(){
+    await d3.json("../Data/mappedData.json").then(data => {
+        console.log(data);
+
+        return tempData = data
+    })
+}
+
+async function gatherDrawData(dates) {
+    await getNewData()
+    
+    console.log(tempData)
     let slider = document.getElementById('slider')
     let date = dates[slider.value].date
     console.log(date)
@@ -238,7 +252,7 @@ function gatherDrawData(dates, newData) {
     }
     let country1 = document.getElementById('dropDown1').value
     let country2 = document.getElementById('dropDown2').value
-    let mappedData = newData.reduce((drawData, entry) => {
+    let mappedData = tempData.reduce((drawData, entry) => {
         entry.children = entry.children.filter(checkDate)
         if (country1 == entry.country || country2 == entry.country) {
             drawData.push(entry)
@@ -251,7 +265,7 @@ function gatherDrawData(dates, newData) {
 }
 
 function updateVis(drawData){
-    let classes = ['first', 'second']
+    let meta = [{class:'first', x: width/3*1, y: height/2}, {class: 'second', x: width/3*2, y: height/2}]
     drawData.forEach((el, i) => {
         console.log(el)
         const root = d3.hierarchy(el)
@@ -261,7 +275,11 @@ function updateVis(drawData){
         const simulation = d3.forceSimulation(nodes)
             .force("link", d3.forceLink(links).id(d => d.id).distance(0).strength(1))
             .force("charge", d3.forceManyBody().strength(-100))
-        const container = d3.select("body").select("svg").select(`#` + classes[i])
+            .force('collision', d3.forceCollide().radius(function (d) {
+                return d.radius
+            }))
+
+        const container = d3.select("body").select("svg").select(`#` + meta[i].class)
         
         let link = container.select(".links")
             .attr("stroke", "#999")
@@ -269,7 +287,7 @@ function updateVis(drawData){
             .selectAll("line")
             .data(links)
             .join("line");
-
+            
         let node = container.select(".nodes")
             .attr("fill", "#fff")
             .attr("stroke", "#000")
