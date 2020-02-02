@@ -49,6 +49,10 @@ section>p {
   text-align: center;
 }
 
+circle::after {
+  fill: white;
+}
+
 div#color {
   z-index: -1;
   width: 100%;
@@ -173,6 +177,22 @@ div#dropDown {
   position: absolute;
   top: 27px;
   left: 48vw;
+}
+
+#holiday0 {
+  position: absolute;
+  width: fit-content;
+  top: 101px;
+  left: 1em;
+  color: white;
+}
+
+#holiday1 {
+  width: fit-content;
+  color: white;
+  top: 101px;
+  position: absolute;
+  left: 63.5vw;
 }
 
 .hidden {

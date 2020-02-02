@@ -5,6 +5,7 @@ const height = 872
 
 let data = []
 let metaData = []
+let holidays = []
 let dates = []
 let startDate = '2017-01-01'
 let dropDown1 = ''
@@ -70,6 +71,9 @@ async function getData(){
     })
     await d3.csv("../data/top2017.csv", entry => {
         return metaData.push(entry)
+    })
+    await d3.csv("../data/holidays.csv", entry => {
+        return holidays.push(entry)
     })
 }
 
@@ -187,12 +191,29 @@ function kickStartData(dates, newData) {
     return mappedData
 }
 
+function checkHoliday(el, i, dates){
+    let slider = document.getElementById('slider')
+    let date = dates[slider.value].date
+    return holidays.find(holiday => holiday.region == el.country && holiday.date == date)
+}
+
 function drawVis(drawData, dates){
     let meta = [{ class: 'first'}, { class: 'second'}]
     drawData = kickStartData(dates, drawData)
+    
     const svgContainer = d3.select("body").append('div')
-        .attr('width', width).attr('height', height).attr('id', 'svgContainer')
+    .attr('width', width).attr('height', height).attr('id', 'svgContainer')
     drawData.forEach((el, i) => {
+        let holidayBar = document.getElementById("holiday" + i)
+        let isHoliday = checkHoliday(el, i, dates)
+        console.log(isHoliday);
+        
+        let holidayH2 = document.createElement('h2')
+        holidayH2.id = 'holidayH2' + i
+        holidayBar.appendChild(holidayH2)
+        if (isHoliday != undefined) {
+            holidayH2.innerHTML = isHoliday.holiday
+        }
         let information = document.getElementById('information')
         let section = document.createElement('section')
         let countryHeader = document.createElement('h2')
@@ -239,13 +260,11 @@ function drawVis(drawData, dates){
 
         const node = container.append("g").attr("class", 'nodes')
             .attr("fill", "#fff")
-            .attr("stroke", "#000")
-            .attr("stroke-width", 1.5)
+            .attr('style', 'cursor: pointer;')
             .selectAll("circle")
             .data(nodes)
             .join("circle")
-            .attr("fill", d => d.children ? null : "#eee")
-            .attr("stroke", d => d.children ? null : "#fff")
+            .attr("fill", d => d.children ? null : "#1ED760")
             .attr("r", d => Math.sqrt(d.data.amountPlayed) / 10)
             .call(drag(simulation))
             .on('click', d => {
@@ -255,6 +274,8 @@ function drawVis(drawData, dates){
                 timesPlayedText.innerHTML = 'Amount played:<br><strong>' + d.data.amountPlayed + '</strong>'
                 percentageDay.innerHTML = 'Percentage of the top 5:<br><strong>' + Math.floor(d.data.amountPlayed / d.parent.data.amountPlayed * 100) + '%</strong>'
             });
+
+        
 
         simulation.on("tick", () => {
             link
@@ -310,11 +331,22 @@ async function gatherDrawData(dates) {
 
     }, [])
     console.log(mappedData)
-    updateVis(mappedData)
+    updateVis(mappedData, dates)
 }
 
-function updateVis(drawData){
+function updateVis(drawData, dates){
     drawData.forEach((el, i) => {
+        let holidayBar = document.getElementById("holiday" + i)
+        let isHoliday = checkHoliday(el, i, dates)
+        console.log(isHoliday);
+        
+        let holidayH2 = document.getElementById('holidayH2' + i)
+        if(isHoliday != undefined) {
+            holidayH2.innerHTML = isHoliday.holiday
+        } else {
+            holidayH2.innerHTML = ''
+        }
+
         let trackText = document.getElementById('trackText' + i)
         let artist = document.getElementById('artist' + i)
         let percentageDay = document.getElementById('percentageDay' + i)
@@ -348,14 +380,11 @@ function updateVis(drawData){
             
         let node = container.select(".nodes")
             .attr("fill", "#fff")
-            .attr("stroke", "#000")
-            .attr("stroke-width", 1.5)
             .attr('style', 'cursor: pointer;')
             .selectAll("circle")
             .data(nodes)
             .join("circle")
-            .attr("fill", d => d.children ? null : "#000")
-            .attr("stroke", d => d.children ? null : "#fff")
+            .attr("fill", d => d.children ? null : "#1ED760")
             .attr("r", d => Math.sqrt(d.data.amountPlayed) / 10)
             .call(drag(simulation))
             .on('click', d => {
@@ -365,6 +394,7 @@ function updateVis(drawData){
                 timesPlayedText.innerHTML = 'Amount played:<br><strong>' + d.data.amountPlayed + '</strong>'
                 percentageDay.innerHTML = 'Percentage of the top 5:<br><strong>' + Math.floor(d.data.amountPlayed / d.parent.data.amountPlayed * 100) + '%</strong>'
             });
+            
 
         simulation.on("tick", () => {
             link
