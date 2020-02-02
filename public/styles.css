@@ -26,6 +26,8 @@ body {
 
 svg {
   margin-top: 101px;
+  width: 50vw;
+  height: 100vw;
 }
 
 div#color {

@@ -176,19 +176,21 @@ function kickStartData(dates, newData) {
 }
 
 function drawVis(drawData, dates){
-    let meta = [{ class: 'first', x: width / 3 * 1, y: height / 2 }, { class: 'second', x: width / 3 * 2, y: height / 2 }]
+    let meta = [{ class: 'first'}, { class: 'second'}]
     drawData = kickStartData(dates, drawData)
-
-    const svg = d3.select("body").append("svg")
-        .attr("viewBox", [-width / 2, -height / 2, width, height]);
+    const svgContainer = d3.select("body").append('div')
+        .attr('width', width).attr('height', height).attr('id', 'svgContainer')
     drawData.forEach((el, i) => {
+        el.amountPlayed = calcDailySize(el)
+        const svg = svgContainer.append("svg")
+            .attr("viewBox", [-400, 50, 960, 900]).attr('id', 'svg'+i)
         const root = d3.hierarchy(el);
         const links = root.links();
         const nodes = root.descendants();
         const container = svg.append("g").attr('id', meta[i].class)
 
         const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(100).strength(1))
+            .force("link", d3.forceLink(links).id(d => d.id).distance((Math.sqrt(el.amountPlayed)/10) * 2).strength(1))
             .force("charge", d3.forceManyBody().strength(-100))
             .force('collision', d3.forceCollide().radius(function (d) {
                 return d.radius
@@ -208,12 +210,14 @@ function drawVis(drawData, dates){
             .selectAll("circle")
             .data(nodes)
             .join("circle")
-            .attr("fill", d => d.children ? null : "#000")
+            .attr("fill", d => d.children ? null : "#eee")
             .attr("stroke", d => d.children ? null : "#fff")
-            .attr("r", d => Math.sqrt(d.data.amountPlayed) / 100)
-            .attr("cx", d => d.children ? null : meta[i].x)
-            .attr("cy", d => d.children ? null : meta[i].y)
-            .call(drag(simulation));
+            .attr("r", d => Math.sqrt(d.data.amountPlayed) / 10)
+            .call(drag(simulation))
+            .on('click', d => {
+                console.log(d);
+
+            });
 
         simulation.on("tick", () => {
             link
@@ -223,12 +227,20 @@ function drawVis(drawData, dates){
                 .attr("y2", d => d.target.y);
 
             node
-                .attr("cx", d => d.x)
-                .attr("cy", d => d.y);
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y);
         });
         return svg.node();
     })
     
+}
+
+function calcDailySize(el){
+    let dailySize = 0
+    el.children.forEach(track => {
+        dailySize += track.amountPlayed
+    })
+    return dailySize
 }
 
 async function getNewData(){
@@ -265,21 +277,23 @@ async function gatherDrawData(dates) {
 }
 
 function updateVis(drawData){
-    let meta = [{class:'first', x: width/3*1, y: height/2}, {class: 'second', x: width/3*2, y: height/2}]
     drawData.forEach((el, i) => {
+        el.amountPlayed = calcDailySize(el)
         console.log(el)
+        console.log(Math.sqrt(el.amountPlayed) / 10);
+        
         const root = d3.hierarchy(el)
         const links = root.links()
         const nodes = root.descendants()
+        const container = d3.select("body").select("#svgContainer").select('#svg' + i).select(`g`)
         
         const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(0).strength(1))
+            .force("link", d3.forceLink(links).id(d => d.id).distance((Math.sqrt(el.amountPlayed) / 10) * 2 ).strength(1))
             .force("charge", d3.forceManyBody().strength(-100))
             .force('collision', d3.forceCollide().radius(function (d) {
                 return d.radius
             }))
 
-        const container = d3.select("body").select("svg").select(`#` + meta[i].class)
         
         let link = container.select(".links")
             .attr("stroke", "#999")
@@ -297,8 +311,12 @@ function updateVis(drawData){
             .join("circle")
             .attr("fill", d => d.children ? null : "#000")
             .attr("stroke", d => d.children ? null : "#fff")
-            .attr("r", d => Math.sqrt(d.data.amountPlayed) / 100)
-            .call(drag(simulation));
+            .attr("r", d => Math.sqrt(d.data.amountPlayed) / 10)
+            .call(drag(simulation))
+            .on('click', d => {
+                console.log(d);
+                
+            });
 
         simulation.on("tick", () => {
             link
@@ -317,20 +335,21 @@ function updateVis(drawData){
 function drag (simulation) {
 
     function dragstarted(d) {
-        if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
+        if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+        d.fx = d.x
+        d.fy = d.y
     }
 
     function dragged(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
+        d.fx = d3.event.x
+        d.fy = d3.event.y
     }
-
+    
     function dragended(d) {
         if (!d3.event.active) simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
+        d.fx = null
+        d.fy = null
+        
     }
 
     return d3.drag()
