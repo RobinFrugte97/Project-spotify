@@ -129,6 +129,9 @@ function mapDates(newData){
 function createSlider(dates){
     dates = dates
     let slider = document.createElement("input")
+    let beginLabel = document.createElement("label")
+    let midLabel = document.createElement("label")
+    let endLabel = document.createElement("label")
     let dateLabel = document.createElement("label")
     let container = document.getElementById('sliderContainer')
     slider.id = 'slider'
@@ -137,7 +140,16 @@ function createSlider(dates){
     slider.max = dates.length-1
     dateLabel.id = 'dateLabel'
     dateLabel.textContent = dates[0].date
+    beginLabel.id = 'beginLabel'
+    midLabel.id = 'midLabel'
+    endLabel.id = 'endLabel'
+    beginLabel.innerHTML = 'January'
+    midLabel.innerHTML = 'July'
+    endLabel.innerHTML = 'December'
     container.appendChild(slider)
+    container.appendChild(beginLabel)
+    container.appendChild(midLabel)
+    container.appendChild(endLabel)
     container.appendChild(dateLabel)
     slider = document.getElementById('slider')
     slider.addEventListener('change', function(el){
@@ -181,6 +193,28 @@ function drawVis(drawData, dates){
     const svgContainer = d3.select("body").append('div')
         .attr('width', width).attr('height', height).attr('id', 'svgContainer')
     drawData.forEach((el, i) => {
+        let information = document.getElementById('information')
+        let section = document.createElement('section')
+        let countryHeader = document.createElement('h2')
+        let trackText = document.createElement('p')
+        let timesPlayedText = document.createElement('p')
+        let percentageDay = document.createElement('p')
+        let artist = document.createElement('p')
+        section.id = 'section' + i
+        countryHeader.id = 'countryHeader' + i
+        trackText.id = 'trackText' + i
+        timesPlayedText.id = 'timesPlayedText' + i
+        percentageDay.id = 'percentageDay' + i
+        artist.id = 'artist' + i
+        let getFullName = countries.find(country => country.abbrev == el.country)
+        countryHeader.innerHTML = getFullName.name
+        section.appendChild(countryHeader)
+        section.appendChild(trackText)
+        section.appendChild(artist)
+        section.appendChild(timesPlayedText)
+        section.appendChild(percentageDay)
+        information.appendChild(section)
+
         el.amountPlayed = calcDailySize(el)
         const svg = svgContainer.append("svg")
             .attr("viewBox", [-400, 50, 960, 900]).attr('id', 'svg'+i)
@@ -215,8 +249,11 @@ function drawVis(drawData, dates){
             .attr("r", d => Math.sqrt(d.data.amountPlayed) / 10)
             .call(drag(simulation))
             .on('click', d => {
-                console.log(d);
-
+                console.log(d)
+                trackText.innerHTML = 'Track name:<br><strong>' + d.data.trackName + '</strong>'
+                artist.innerHTML = 'Artist:<br><strong>' + d.data.artist + '</strong>'
+                timesPlayedText.innerHTML = 'Amount played:<br><strong>' + d.data.amountPlayed + '</strong>'
+                percentageDay.innerHTML = 'Percentage of the top 5:<br><strong>' + Math.floor(d.data.amountPlayed / d.parent.data.amountPlayed * 100) + '%</strong>'
             });
 
         simulation.on("tick", () => {
@@ -278,6 +315,13 @@ async function gatherDrawData(dates) {
 
 function updateVis(drawData){
     drawData.forEach((el, i) => {
+        let trackText = document.getElementById('trackText' + i)
+        let artist = document.getElementById('artist' + i)
+        let percentageDay = document.getElementById('percentageDay' + i)
+        let timesPlayedText = document.getElementById('timesPlayedText' + i)
+        let getFullName = countries.find(country => country.abbrev == el.country)
+        let countryHeader = document.getElementById('countryHeader' + i)
+        countryHeader.innerHTML = getFullName.name
         el.amountPlayed = calcDailySize(el)
         console.log(el)
         console.log(Math.sqrt(el.amountPlayed) / 10);
@@ -306,6 +350,7 @@ function updateVis(drawData){
             .attr("fill", "#fff")
             .attr("stroke", "#000")
             .attr("stroke-width", 1.5)
+            .attr('style', 'cursor: pointer;')
             .selectAll("circle")
             .data(nodes)
             .join("circle")
@@ -314,8 +359,11 @@ function updateVis(drawData){
             .attr("r", d => Math.sqrt(d.data.amountPlayed) / 10)
             .call(drag(simulation))
             .on('click', d => {
-                console.log(d);
-                
+                console.log(d)
+                trackText.innerHTML = 'Track name:<br><strong>' + d.data.trackName + '</strong>'
+                artist.innerHTML = 'Artist:<br><strong>' + d.data.artist + '</strong>'
+                timesPlayedText.innerHTML = 'Amount played:<br><strong>' + d.data.amountPlayed + '</strong>'
+                percentageDay.innerHTML = 'Percentage of the top 5:<br><strong>' + Math.floor(d.data.amountPlayed / d.parent.data.amountPlayed * 100) + '%</strong>'
             });
 
         simulation.on("tick", () => {
