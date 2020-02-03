@@ -4,6 +4,12 @@ This will be a personal project of mine, exploring and combining fun datasets. T
 
 ![](https://github.com/RobinFrugte97/Project-spotify/blob/master/src/images/readmess.png)
 
+## Concept
+
+The concept an interactive network graph that links Spotify tracks to countries. Different countries are to be compared to see how these countries differ. A dataset of holidays is added to the combination to see if the holidays are an influence to the music choice of the country.
+
+The user can select two different countries to compare. The user can also select which date they would like to see displayed. If a user wants to compare songs, they can click on the tracks circles to have the bound information displayed.
+
 ## List of datasets
 
 This is a list of all the interesting datasets:
