@@ -10,6 +10,10 @@ The concept an interactive network graph that links Spotify tracks to countries.
 
 The user can select two different countries to compare. The user can also select which date they would like to see displayed. If a user wants to compare songs, they can click on the tracks circles to have the bound information displayed.
 
+## Wiki
+
+More about this project can be read here: [Wiki](https://github.com/RobinFrugte97/Project-spotify/wiki)
+
 ## List of datasets
 
 This is a list of the datasets currently in use:
