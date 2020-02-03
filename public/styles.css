@@ -3,3 +3,230 @@
   stroke: #9ecae1;
   stroke-width: 1.5px;
 }
+
+h1 {
+  text-align: center;
+  color: white;
+  background-color: rgba(0,0,0, 50%);
+  position: absolute;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  margin: 0;
+  height: 98%;
+  display: flex;
+  font-family: Arial, Helvetica, sans-serif;
+  flex-direction: column;
+}
+
+svg {
+  margin-top: 101px;
+  width: 50vw;
+  height: 100vw;
+}
+
+section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1em;
+  width: 50%;
+  margin-top: 2em;
+}
+
+section>* {
+  margin: 0;
+}
+
+section>p {
+  margin-top: .5em;
+  margin-bottom: .5em;
+  text-align: center;
+}
+
+circle::after {
+  fill: white;
+}
+
+div#color {
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-image: linear-gradient(90deg, #C074B2, #8AB5E8);
+}
+
+div#black {
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-image: linear-gradient(transparent, #000);
+}
+
+div#dropDown {
+    position: absolute;
+    align-self: flex-end;
+    margin-top: 3em;
+    padding-right: 9em;
+}
+
+#wrapper {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+  top: 0;
+  background: white;
+  transition: display .5s ease;
+}
+
+#loader {
+  border: 16px none transparent;
+  border-top: 60px dotted #C074B2;
+  width: 120px;
+  height: 50px;
+  animation: spin 2s ease infinite;
+  position: relative;
+  align-self: center;
+}
+
+#loader::after {
+  content: '';
+  position: absolute;
+  border: 16px none transparent;
+  border-top: 60px dotted #8AB5E8;
+  opacity: .5;
+  width: 120px;
+  height: 1px;
+  transition: .35s;
+  animation: spinAfter 2s ease infinite;
+}
+
+#loader-text {
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: rgba(0,0,0, 0%);
+  color: black;
+  position: absolute;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  width: 100%;
+  margin-top: 5em;
+}
+
+#sliderContainer {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 85vh;
+  width: 50%;
+  align-self: center;
+}
+
+#slider {
+  width: 100%;
+  align-self: center;
+}
+
+#dateLabel {
+  position: absolute;
+  color: black;
+  font-family: helvetica;
+  align-self: center;
+  top: -715px;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+#information {
+  position: absolute;
+  display: flex;
+  width: 25%;
+  align-self: center;
+  top: 101px;
+  background-color: white;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  box-shadow: 0px 7px 23px -10px rgba(0,0,0,0.75);
+}
+
+#beginLabel {
+  position: absolute;
+  color: white;
+  left: -29px;
+  top: 27px;
+}
+
+#midLabel {
+  position: absolute;
+  color: white;
+  left: 24vw;
+  top: 27px;
+}
+
+#endLabel {
+  color: white;
+  position: absolute;
+  top: 27px;
+  left: 48vw;
+}
+
+#holiday0 {
+  position: absolute;
+  width: fit-content;
+  top: 101px;
+  left: 1em;
+  color: white;
+}
+
+#holiday1 {
+  width: fit-content;
+  color: white;
+  top: 101px;
+  position: absolute;
+  left: 63.5vw;
+}
+
+.hidden {
+  display: none;
+}
+
+.flex {
+  display: flex;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  50% {
+    transform: rotate(360deg);
+    opacity: .5;
+  }
+  100% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes spinAfter {
+  0% {
+    transform: rotate(0deg);
+
+  }
+  50% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
