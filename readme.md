@@ -2,6 +2,8 @@
 
 This will be a personal project of mine, exploring and combining fun datasets. The goal is to create an interactive datavisualisation with [D3](d3js.org).
 
+![](https://github.com/RobinFrugte97/Project-spotify/blob/master/src/images/readmess.png)
+
 ## List of datasets
 
 This is a list of all the interesting datasets:
