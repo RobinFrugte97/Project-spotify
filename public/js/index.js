@@ -199,6 +199,7 @@ function checkHoliday(el, i, dates){
 
 function drawVis(drawData, dates){
     let meta = [{ class: 'first'}, { class: 'second'}]
+    let legend = [{ size: 150000, color: '#1ED760', x: 25, y: 0, text: 150000 + " tracks played" }, { size: 80000, color: '#1ED760', x: 25, y: 73, text: 80000 + " tracks played" }, { size: 50000, color: '#1ED760', x: 25, y: 132, text: 50000 + " tracks played" }, { size: 20000, color: '#1ED760', x: 25, y: 177, text: 20000 + " tracks played" }, { size: 150000, color: 'white', x: 25, y: 240, text: "Country circle" }]
     drawData = kickStartData(dates, drawData)
     
     const svgContainer = d3.select("body").append('div')
@@ -273,7 +274,34 @@ function drawVis(drawData, dates){
                 artist.innerHTML = 'Artist:<br><strong>' + d.data.artist + '</strong>'
                 timesPlayedText.innerHTML = 'Amount played:<br><strong>' + d.data.amountPlayed + '</strong>'
                 percentageDay.innerHTML = 'Percentage of the top 5:<br><strong>' + Math.floor(d.data.amountPlayed / d.parent.data.amountPlayed * 100) + '%</strong>'
+                let intro = document.getElementById('intro')
+                intro.innerHTML = ''
             });
+        
+        if (i = 1) {
+            d3.select("body").select("#svgContainer").select('#svg1').append('g').attr('id', 'legend')
+            const info = d3.select('#legend').selectAll('circle')
+                .data(legend)
+
+            info
+                .enter()
+                .append('circle')
+                .attr('r', d => Math.sqrt(d.size) / 10)
+                .attr('fill', d => d.color)
+                .attr('cx', d => d.x + "vw")
+                .attr('cy', d => (d.y + 80) + "px")
+
+            const text = d3.select("#legend").selectAll("text")
+                .data(legend)
+
+            text
+                .enter()
+                .append("text")
+                .text(d => d.text)
+                .attr('x', d => (d.x - 11) + "vw")
+                .attr('y', d => (d.y + 87) + "px")
+                .attr('fill', "white")
+        }
 
         
 
@@ -393,6 +421,8 @@ function updateVis(drawData, dates){
                 artist.innerHTML = 'Artist:<br><strong>' + d.data.artist + '</strong>'
                 timesPlayedText.innerHTML = 'Amount played:<br><strong>' + d.data.amountPlayed + '</strong>'
                 percentageDay.innerHTML = 'Percentage of the top 5:<br><strong>' + Math.floor(d.data.amountPlayed / d.parent.data.amountPlayed * 100) + '%</strong>'
+                let intro = document.getElementById('intro')
+                intro.innerHTML = ''
             });
             
 

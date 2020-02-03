@@ -195,6 +195,17 @@ div#dropDown {
   left: 63.5vw;
 }
 
+#intro {
+  position: absolute;
+  left: 43vw;
+  top: 21vh;
+  z-index: 4;
+  width: fit-content;
+  color: rgb(30, 215, 96);
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
 .hidden {
   display: none;
 }
