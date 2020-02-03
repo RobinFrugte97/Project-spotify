@@ -12,13 +12,10 @@ The user can select two different countries to compare. The user can also select
 
 ## List of datasets
 
-This is a list of all the interesting datasets:
+This is a list of the datasets currently in use:
 
-- [Top spotify songs 2010-2019](https://www.kaggle.com/leonardopena/top-spotify-songs-from-20102019-by-year)
 - [Worldwide top spotify songs per county, per day of 2017](https://www.kaggle.com/edumucelli/spotifys-worldwide-daily-song-ranking)
 - [Top spotify songs of 2017 more detail](https://www.kaggle.com/nadintamer/top-tracks-of-2017)
-- [Top spotify songs of 2018 more detail](https://www.kaggle.com/nadintamer/top-spotify-tracks-of-2018)
-- [Top spotify songs of 2019 more detail](https://www.kaggle.com/leonardopena/top50spotify2019)
 
 
 I will be using a dataset containing the top 100 spotify songs for each day of 53 countries, for a year long.
@@ -34,3 +31,16 @@ The list of countries I will use in this application:
 - Netherlands (nl)
 - New Zealand (nz)
 - Turkey (tr)
+
+## Usage
+
+Because of the size of the data I have left the sets out of the package. They can be downloaded through the provided links above. 
+
+The application can be run by running `ìndex.html`.
+
+A repo named "Data" is required in the root of the application, containing all the downloaded datasets.
+
+
+## Dependancies
+
+There are no dependancies required. [Nodemon](https://www.npmjs.com/package/nodemon) was used for local developement, aswell as a local server.js file to serve the `index.html` file.
