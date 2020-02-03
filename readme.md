@@ -25,7 +25,7 @@ The list of countries I will use in this application:
 - Ecuador (ec)
 - Hong Kong (hk)
 - Finland (fi)
-- Sri Lanka (lk)
+- Latvia (lv)
 - Italy (it)
 - Japan (jp)
 - Netherlands (nl)
