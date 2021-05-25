@@ -2,7 +2,7 @@
 
 This will be a personal project of mine, exploring and combining fun datasets. The goal is to create an interactive datavisualisation with [D3](d3js.org).
 
-![](https://github.com/RobinFrugte97/Project-spotify/blob/master/src/images/readmess.png)
+![](https://raw.githubusercontent.com/RobinFrugte97/Project-spotify/master/src/images/readmess.png)
 
 ## Concept
 
